@@ -1,14 +1,15 @@
 package javagame;
 
 import org.newdawn.slick.*;
-import org.newdawn.slick.state.*;
 
 public class Character {
 	
 	Image sprite;
-	Animation idle;
+	Animation currentAnimation;
 	float xpos;
 	float ypos;
+	
+	
 	
 	public Animation getAnimation(Image i, int spritesX, int spritesY, int spriteWidth, int spriteHeight, int frames, int duration)
 	{
@@ -26,9 +27,9 @@ public class Character {
 		return a;
 	}
 	
-	public void idleAnimation()
+	public void Animation(float xpos, float ypos)
 	{
-		idle.draw(xpos, ypos);
+		currentAnimation.draw(xpos, ypos);
 	}
 	
 
