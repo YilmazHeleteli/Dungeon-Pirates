@@ -9,13 +9,16 @@ public class Game extends StateBasedGame{
 	public static final int menu = 0;
 	public static final int play = 1;
 	public static final int town = 2;
+	public static final int docks = 3;
 	
+	Music music;
 	
 	public Game (String gamename) {
 		super(gamename);
 		this.addState(new Menu(menu));
 		this.addState(new Play(play));
 		this.addState(new Town(town));
+		this.addState(new Docks(docks));
 
 	}
 	
@@ -23,7 +26,8 @@ public class Game extends StateBasedGame{
 		this.getState(menu).init(gc, this);
 		this.getState(play).init(gc, this);
 		this.getState(town).init(gc, this);
-		this.enterState(play);
+		this.getState(docks).init(gc, this);
+		this.enterState(town);
 	}
 
 	public static void main(String[] args) {

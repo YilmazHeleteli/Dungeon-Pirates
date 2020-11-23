@@ -11,6 +11,7 @@ public class Play extends BasicGameState{
 	public String playerPos = "";
 	text text = new text();
 	Image healthUI;
+	
 	Door exit = new Door();
 	NPC NPC1 = new NPC();
 	NPC NPC2 = new NPC();
@@ -18,23 +19,23 @@ public class Play extends BasicGameState{
 	Player player = new Player();
 	
 	Image background; 
-	private Music music;
+	private Music drunk;
 	
 	public Play(int state) {
-		
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
 		background = new Image("res/MainTown/tavern.png");
-		music = new Music("res/MainTown/drunk.wav");
+		
 		healthUI = new Image("res/UI/health.png");
 		
+		drunk = new Music("res/MainTown/drunk.wav");
 		//music.loop();
 		
 		player.init();
 		player.xpos = 500;
-		player.ypos = 361;
+		player.ypos = 457;
 		
 		NPC1.sprite = new Image("res/MainTown/NPC1/idle.png");
 	    NPC1.xpos = 247;
@@ -53,6 +54,7 @@ public class Play extends BasicGameState{
 		exit.x2 = 546;
 		exit.y1 = 534;
 		exit.y2 = 490;
+		drunk.play();
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
@@ -76,18 +78,8 @@ public class Play extends BasicGameState{
 		
 	}
 	
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		int xpos = Mouse.getX();
-		int ypos = Mouse.getY();
-		
-		Input input = gc.getInput();
-		mouse = "X: " + xpos + " Y: " + ypos;
-		playerPos = "X: " + player.xpos + " Y: " + player.ypos;	
-		NPC1.currentAnimation.update(delta);
-		NPC2.currentAnimation.update(delta);
-		player.move(gc);
-		player.currentAnimation.update(delta);
-		
+	public void collision()
+	{
 		if(player.xpos < 160)
 		{
 			player.xpos++;
@@ -104,13 +96,24 @@ public class Play extends BasicGameState{
 		{
 			player.ypos++;
 		}
+	}
+	
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		int xpos = Mouse.getX();
+		int ypos = Mouse.getY();
+	
+		
+		Input input = gc.getInput();
+		mouse = "X: " + xpos + " Y: " + ypos;
+		playerPos = "X: " + player.xpos + " Y: " + player.ypos;	
+		NPC1.currentAnimation.update(delta);
+		NPC2.currentAnimation.update(delta);
+		player.move(gc);
+		player.currentAnimation.update(delta);
+		collision();
+		
 		exit.checkInside(player.xpos, player.ypos);
-		if(exit.inside == true && input.isKeyDown(Input.KEY_E))
-		{
-			player.xpos = 500;
-			player.ypos = 460;
-			sbg.enterState(2);
-		}
+		exit.enter(gc, sbg, 2);
 	}
 	
 	public int getID() {
