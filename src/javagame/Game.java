@@ -11,7 +11,7 @@ public class Game extends StateBasedGame{
 	public static final int town = 2;
 	public static final int docks = 3;
 	
-	Music music;
+
 	
 	public Game (String gamename) {
 		super(gamename);
@@ -27,7 +27,7 @@ public class Game extends StateBasedGame{
 		this.getState(play).init(gc, this);
 		this.getState(town).init(gc, this);
 		this.getState(docks).init(gc, this);
-		this.enterState(town);
+		this.enterState(play);
 	}
 
 	public static void main(String[] args) {

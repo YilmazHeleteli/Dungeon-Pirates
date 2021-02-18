@@ -1,8 +1,10 @@
 package javagame;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.state.*;
 import org.lwjgl.input.Mouse;
+
 
 
 public class Play extends BasicGameState{
@@ -13,7 +15,7 @@ public class Play extends BasicGameState{
 	Image healthUI;
 	
 	Door exit = new Door();
-	NPC NPC1 = new NPC();
+	NPC Katrina = new NPC();
 	NPC NPC2 = new NPC();
 	
 	Player player = new Player();
@@ -37,11 +39,14 @@ public class Play extends BasicGameState{
 		player.xpos = 500;
 		player.ypos = 457;
 		
-		NPC1.sprite = new Image("res/MainTown/NPC1/idle.png");
-	    NPC1.xpos = 247;
-	    NPC1.ypos = 218;
-		NPC1.currentAnimation = NPC1.getAnimation(NPC1.sprite, 10, 1, 150, 90, 144, 100);
-		NPC1.has_quest = true;
+		Katrina.name = "Katrina";
+		Katrina.sprite = new Image("res/MainTown/NPC1/idle.png");
+	    Katrina.xpos = 247;
+	    Katrina.ypos = 218;
+		Katrina.currentAnimation = Katrina.getAnimation(Katrina.sprite, 10, 1, 150, 90, 144, 100);
+		Katrina.has_quest = true;
+		Katrina.setInteract(90, 0, -100);
+	
 		
 		NPC2.sprite = new Image("res/MainTown/NPC2/idle.png");
 		NPC2.xpos = 800;
@@ -65,8 +70,11 @@ public class Play extends BasicGameState{
 		player.displayHealth(g);
 		g.drawString(mouse, 50, 50);
 		text.blankText();		
-		NPC1.Animation(NPC1.xpos, NPC1.ypos);
-		NPC1.displayHasQuest();
+		Katrina.Animation(Katrina.xpos, Katrina.ypos);
+		Katrina.displayHasQuest();
+		g.draw(Katrina.interactZone);
+	
+
 	    NPC2.Animation(NPC2.xpos, NPC2.ypos);
 		
 		player.Animation(player.xpos,player.ypos);
@@ -74,6 +82,10 @@ public class Play extends BasicGameState{
 		if(exit.inside == true)
 		{
 			text.enterDoor(g, exit.text);
+		}
+		if(Katrina.insideInteract == true)
+		{
+			text.talk(g, Katrina.name);
 		}
 		
 	}
@@ -106,12 +118,15 @@ public class Play extends BasicGameState{
 		Input input = gc.getInput();
 		mouse = "X: " + xpos + " Y: " + ypos;
 		playerPos = "X: " + player.xpos + " Y: " + player.ypos;	
-		NPC1.currentAnimation.update(delta);
+		Katrina.currentAnimation.update(delta);
 		NPC2.currentAnimation.update(delta);
 		player.move(gc);
 		player.currentAnimation.update(delta);
 		collision();
 		
+		Katrina.checkInteract(player.xpos, player.ypos);
+		
+	
 		exit.checkInside(player.xpos, player.ypos);
 		exit.enter(gc, sbg, 2);
 	}

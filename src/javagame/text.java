@@ -15,7 +15,7 @@ public class text {
 	}
 	public void talk(Graphics g, String target)
 	{
-		final String talk = "Press E to talk to ";
+		final String talk = "Press E to talk to " + target;
 		g.drawString(talk, 460,700);
 	}
 	public void enterDoor(Graphics g, String text)
