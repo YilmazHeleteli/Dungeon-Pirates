@@ -14,19 +14,25 @@ public class Play extends BasicGameState{
 	text text = new text();
 	Image healthUI;
 	
+	String test;
+	
 	Door exit = new Door();
 	NPC Katrina = new NPC();
 	NPC NPC2 = new NPC();
 	
 	Player player = new Player();
+	UI ui = new UI();
 	
-	Image background; 
+	Image background;
+	Image inventory;
 	private Music drunk;
 	
 	public Play(int state) {
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
+		
+		test = "test";
 		
 		background = new Image("res/MainTown/tavern.png");
 		
@@ -46,6 +52,8 @@ public class Play extends BasicGameState{
 		Katrina.currentAnimation = Katrina.getAnimation(Katrina.sprite, 10, 1, 150, 90, 144, 100);
 		Katrina.has_quest = true;
 		Katrina.setInteract(90, 0, -100);
+		
+		
 	
 		
 		NPC2.sprite = new Image("res/MainTown/NPC2/idle.png");
@@ -60,11 +68,17 @@ public class Play extends BasicGameState{
 		exit.y1 = 534;
 		exit.y2 = 490;
 		drunk.play();
+		
+		ui.init(gc, sbg);
+		
+		
+		
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		
 		background.draw(0, -150);
+		g.drawString(test, 500, 50);
 		g.drawString(String.valueOf(playerPos), 50, 80);
 		healthUI.draw(0,0);
 		player.displayHealth(g);
@@ -73,12 +87,16 @@ public class Play extends BasicGameState{
 		Katrina.Animation(Katrina.xpos, Katrina.ypos);
 		Katrina.displayHasQuest();
 		g.draw(Katrina.interactZone);
-	
 
 	    NPC2.Animation(NPC2.xpos, NPC2.ypos);
-		
+	
 		player.Animation(player.xpos,player.ypos);
 		
+		if(ui.invOpen == true)
+		{
+			ui.openInventory(gc, sbg, g);
+		}
+
 		if(exit.inside == true)
 		{
 			text.enterDoor(g, exit.text);
@@ -87,7 +105,8 @@ public class Play extends BasicGameState{
 		{
 			text.talk(g, Katrina.name);
 		}
-		
+
+
 	}
 	
 	public void collision()
@@ -124,9 +143,9 @@ public class Play extends BasicGameState{
 		player.currentAnimation.update(delta);
 		collision();
 		
-		Katrina.checkInteract(player.xpos, player.ypos);
+		Katrina.checkInteract(player.xpos, player.ypos, gc);
 		
-	
+	    ui.inventory(gc, sbg);
 		exit.checkInside(player.xpos, player.ypos);
 		exit.enter(gc, sbg, 2);
 	}
