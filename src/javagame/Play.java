@@ -14,7 +14,8 @@ public class Play extends BasicGameState{
 	text text = new text();
 	Image healthUI;
 	
-	String test;
+	float test;
+	float test2;
 	
 	Door exit = new Door();
 	NPC Katrina = new NPC();
@@ -25,22 +26,24 @@ public class Play extends BasicGameState{
 	
 	Image background;
 	Image inventory;
-	private Music drunk;
+	private float musicPos;
 	
 	public Play(int state) {
+		
+		
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
-		test = "test";
+		
 		
 		background = new Image("res/MainTown/tavern.png");
 		
 		healthUI = new Image("res/UI/health.png");
-		
-		drunk = new Music("res/MainTown/drunk.wav");
-		//music.loop();
-		
+		test = 0;
+		ui.music = new Music("res/MainTown/drunk.wav");
+		ui.music.loop();
+
 		player.init();
 		player.xpos = 500;
 		player.ypos = 457;
@@ -54,8 +57,6 @@ public class Play extends BasicGameState{
 		Katrina.setInteract(90, 0, -100);
 		
 		
-	
-		
 		NPC2.sprite = new Image("res/MainTown/NPC2/idle.png");
 		NPC2.xpos = 800;
 		NPC2.ypos = 260;
@@ -67,7 +68,7 @@ public class Play extends BasicGameState{
 		exit.x2 = 546;
 		exit.y1 = 534;
 		exit.y2 = 490;
-		drunk.play();
+
 		
 		ui.init(gc, sbg);
 		
@@ -78,15 +79,16 @@ public class Play extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		
 		background.draw(0, -150);
-		g.drawString(test, 500, 50);
+		g.drawString(Float.toString(musicPos), 500, 50);
 		g.drawString(String.valueOf(playerPos), 50, 80);
+
 		healthUI.draw(0,0);
 		player.displayHealth(g);
 		g.drawString(mouse, 50, 50);
-		text.blankText();		
+				
 		Katrina.Animation(Katrina.xpos, Katrina.ypos);
 		Katrina.displayHasQuest();
-		g.draw(Katrina.interactZone);
+		
 
 	    NPC2.Animation(NPC2.xpos, NPC2.ypos);
 	
@@ -99,10 +101,12 @@ public class Play extends BasicGameState{
 
 		if(exit.inside == true)
 		{
+			text.blankText();
 			text.enterDoor(g, exit.text);
 		}
 		if(Katrina.insideInteract == true)
 		{
+			text.blankText();
 			text.talk(g, Katrina.name);
 		}
 
@@ -132,8 +136,11 @@ public class Play extends BasicGameState{
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		int xpos = Mouse.getX();
 		int ypos = Mouse.getY();
-	
 		
+		ui.playMusic(ui.music);
+		
+		
+
 		Input input = gc.getInput();
 		mouse = "X: " + xpos + " Y: " + ypos;
 		playerPos = "X: " + player.xpos + " Y: " + player.ypos;	
@@ -145,9 +152,14 @@ public class Play extends BasicGameState{
 		
 		Katrina.checkInteract(player.xpos, player.ypos, gc);
 		
+		
+	
+		
 	    ui.inventory(gc, sbg);
 		exit.checkInside(player.xpos, player.ypos);
-		exit.enter(gc, sbg, 2);
+		exit.enter(gc, sbg, 2, ui.music);
+		
+		
 	}
 	
 	public int getID() {
