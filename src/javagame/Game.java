@@ -18,7 +18,7 @@ public class Game extends StateBasedGame{
 		this.addState(new Menu(menu));
 		this.addState(new Play(play));
 		this.addState(new Town(town));
-		this.addState(new Docks(docks));
+
 
 	}
 	
@@ -26,7 +26,6 @@ public class Game extends StateBasedGame{
 		this.getState(menu).init(gc, this);
 		this.getState(play).init(gc, this);
 		this.getState(town).init(gc, this);
-		this.getState(docks).init(gc, this);
 		this.enterState(play);
 	}
 

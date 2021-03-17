@@ -2,6 +2,7 @@ package javagame;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.state.StateBasedGame;
 
 public class NPC extends Character{
 	
@@ -51,6 +52,24 @@ public class NPC extends Character{
 			insideInteract = false;
 		}
 		
+	}
+	
+	protected void load (GameContainer gc, StateBasedGame sbg, int delta, Player player) throws SlickException
+	{
+		checkInteract(player.xpos, player.ypos, gc);
+		currentAnimation.update(delta);
+	}
+	
+	protected void render(NPC npc, text text, Graphics g) throws SlickException
+	{
+		Animation(npc.xpos, npc.ypos);
+		displayHasQuest();
+		if(insideInteract == true)
+		{
+			text.blankText();
+			text.talk(g, npc.name);
+		}
+
 	}
 	
 	protected void interact()

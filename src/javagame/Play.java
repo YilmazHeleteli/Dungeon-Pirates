@@ -12,16 +12,16 @@ public class Play extends BasicGameState{
 	public String mouse = "";
 	public String playerPos = "";
 	text text = new text();
-	Image healthUI;
+
 	
 	float test;
 	float test2;
 	
-	Door exit = new Door();
+	Door exit = new Door(464, 546, 535, 490, "Exit The Jolly Sailor");
 	NPC Katrina = new NPC();
-	NPC NPC2 = new NPC();
+	NPC Dave = new NPC();
 	
-	Player player = new Player();
+	Player player = new Player(500, 457);
 	UI ui = new UI();
 	
 	Image background;
@@ -35,18 +35,14 @@ public class Play extends BasicGameState{
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		
-		
-		
 		background = new Image("res/MainTown/tavern.png");
 		
-		healthUI = new Image("res/UI/health.png");
+		
 		test = 0;
 		ui.music = new Music("res/MainTown/drunk.wav");
 		ui.music.loop();
 
 		player.init();
-		player.xpos = 500;
-		player.ypos = 457;
 		
 		Katrina.name = "Katrina";
 		Katrina.sprite = new Image("res/MainTown/NPC1/idle.png");
@@ -57,18 +53,11 @@ public class Play extends BasicGameState{
 		Katrina.setInteract(90, 0, -100);
 		
 		
-		NPC2.sprite = new Image("res/MainTown/NPC2/idle.png");
-		NPC2.xpos = 800;
-		NPC2.ypos = 260;
-		NPC2.currentAnimation = NPC2.getAnimation(NPC2.sprite, 7, 1, 150, 125, 144, 100);
-		NPC2.has_quest = false;
-		
-		exit.text = "exit The Jolly Sailor";
-		exit.x1 = 464;
-		exit.x2 = 546;
-		exit.y1 = 534;
-		exit.y2 = 490;
-
+		Dave.sprite = new Image("res/MainTown/NPC2/idle.png");
+		Dave.xpos = 800;
+		Dave.ypos = 260;
+		Dave.currentAnimation = Dave.getAnimation(Dave.sprite, 7, 1, 150, 125, 144, 100);
+		Dave.has_quest = false;
 		
 		ui.init(gc, sbg);
 		
@@ -82,34 +71,14 @@ public class Play extends BasicGameState{
 		g.drawString(Float.toString(musicPos), 500, 50);
 		g.drawString(String.valueOf(playerPos), 50, 80);
 
-		healthUI.draw(0,0);
-		player.displayHealth(g);
+		ui.render(ui, player, g);
+		
 		g.drawString(mouse, 50, 50);
 				
-		Katrina.Animation(Katrina.xpos, Katrina.ypos);
-		Katrina.displayHasQuest();
-		
-
-	    NPC2.Animation(NPC2.xpos, NPC2.ypos);
-	
+		Katrina.render(Katrina, text, g);
+	    Dave.render(Dave, text, g);
 		player.Animation(player.xpos,player.ypos);
-		
-		if(ui.invOpen == true)
-		{
-			ui.openInventory(gc, sbg, g);
-		}
-
-		if(exit.inside == true)
-		{
-			text.blankText();
-			text.enterDoor(g, exit.text);
-		}
-		if(Katrina.insideInteract == true)
-		{
-			text.blankText();
-			text.talk(g, Katrina.name);
-		}
-
+		exit.renderDoor(g, exit, text);
 
 	}
 	
@@ -136,29 +105,15 @@ public class Play extends BasicGameState{
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		int xpos = Mouse.getX();
 		int ypos = Mouse.getY();
-		
-		ui.playMusic(ui.music);
-		
-		
+		collision();
 
-		Input input = gc.getInput();
 		mouse = "X: " + xpos + " Y: " + ypos;
 		playerPos = "X: " + player.xpos + " Y: " + player.ypos;	
-		Katrina.currentAnimation.update(delta);
-		NPC2.currentAnimation.update(delta);
-		player.move(gc);
-		player.currentAnimation.update(delta);
-		collision();
-		
-		Katrina.checkInteract(player.xpos, player.ypos, gc);
-		
-		
-	
-		
-	    ui.inventory(gc, sbg);
-		exit.checkInside(player.xpos, player.ypos);
-		exit.enter(gc, sbg, 2, ui.music);
-		
+		player.load(gc, sbg, delta);
+		Katrina.load(gc, sbg, delta, player);
+		Dave.load(gc, sbg, delta, player);
+		ui.load(gc, sbg, delta);
+		exit.load(gc, sbg, 2, player, ui);
 		
 	}
 	

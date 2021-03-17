@@ -1,6 +1,7 @@
 package javagame;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.state.StateBasedGame;
 
 public class Player extends Character{
 
@@ -8,9 +9,6 @@ public class Player extends Character{
 	char direction = 'r';
 	int health = 100;
 
-	
-	
-	
 	boolean movingR;
 	boolean movingL;
 	boolean movingU;
@@ -23,6 +21,12 @@ public class Player extends Character{
 	Image runningRight;
 	Image runningLeft;
 	
+	public Player(float x, float y)
+	{
+		xpos = x;
+		ypos = y;
+	}
+	
 	public void init() throws SlickException
 	{
 		
@@ -32,8 +36,6 @@ public class Player extends Character{
 		currentAnimation = getAnimation(sprite, 10, 1, 300, 167, 144, 80);
 		walkingRight = new Image("res/Player/walkRight.png");
 		walkingLeft = new Image("res/Player/walkLeft.png");
-	
-		
 	}
 	
 	
@@ -159,11 +161,15 @@ public class Player extends Character{
 		
 }
 	
-	
-	
 	public void displayHealth(Graphics g)
 	{
 	     g.drawString(String.valueOf(health), 1090, 20);
+	}
+	
+	protected void load(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
+	{
+		move(gc);
+		currentAnimation.update(delta);
 	}
 	
 }
